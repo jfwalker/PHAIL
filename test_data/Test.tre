@@ -1,0 +1,3 @@
+((Spol,Beta)90:0.10,((WPYJ,Retr),((RuprSFB,MJM3360),((MJM2940,DrolusSFB),((DrobinSFB,(MJM1652,Dino)),(NepSFB,Neam))))));
+((Spol,Beta),((Retr,WPYJ),((RuprSFB,MJM3360),((DrobinSFB,(MJM1652,Dino)),((DrolusSFB,MJM2940),(NepSFB,Neam))))));
+((Beta,Spol),(((MJM3360,RuprSFB),((Neam,NepSFB),((DrobinSFB,(Dino,MJM1652)),(MJM2940,DrolusSFB)))),(WPYJ,Retr)));
