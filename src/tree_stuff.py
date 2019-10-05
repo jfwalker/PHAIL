@@ -169,6 +169,7 @@ def comp_biparts(tree_bipart,all_biparts):
 	return False
 	
 #compare if any incoming biparts are new
+#can add in bipart counts
 def get_biparts(trees_clades, all_biparts):
 	
 	new_biparts = []
@@ -227,8 +228,39 @@ def make_constraints(biparts, out_folder, outf):
 		constraint_list.append(constraint_name)
 		count += 1
 	return constraint_list
+
+
+#check to see if two bipartitions conflict with one another
+def conflict_check(bipart1,bipart2):
+	
+	bi = bipart1.split("|")
+	bipart1_part1 = bi[0].split(",")
+	bipart1_part2 = bi[1][0:].split(",")
+	bi2 = bipart2.split("|")
+	bipart2_part1 = bi2[0].split(",")
+	bipart2_part2 = bi2[1][0:].split(",")
+	
+	#print str(bipart1_part2) + " comp " + str(bipart2_part2)
+	
+def get_conflicts(outd):
+
+	bips = open(outd + "/bipartitions.txt", "r")
+
+	#parse existing bipartitions
+	b = []
+	for i in bips:
+		a = i.split(": ")
+		a[1] = a[1].rstrip("\n\r")
+		b.append(a)
+	
+	#run all against all
+	for i in b:
+
+		for j in b:
 		
+			conflict_check(i[1],j[1])
 		
+			
 
 
 

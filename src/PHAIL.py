@@ -43,9 +43,15 @@ def generate_argparser():
 	
 def main(arguments=None):
 	
+
 	parser = generate_argparser()
 	args = parser.parse_args(arguments)
 	Extras.get_time("Run Starting", None)
+	
+	if args.checkpoint == None and args.partition == None:
+		print "Killed run, need either a checkpoint or files to run. For a simple reverse concatenate run without trees. For info type PHAIL.py -h"
+		Extras.get_time("Run killed", None)
+		sys.exit()
 	
 	if args.checkpoint:
 		print "Reading in " + args.checkpoint
@@ -165,6 +171,7 @@ def main(arguments=None):
 		Extras.get_time(message, outf)
 	elif args.iqtree == None and args.raxml == None and args.checkpoint == None:
 		iqtree = "iqtree"
+		raxml = ""
 		message = "you are running iqtree from " + iqtree
 		Extras.get_time(message, outf)
 	
@@ -182,15 +189,20 @@ def main(arguments=None):
 	elif args.raxml:
 		outl = open(output_folder + "/Likelihoods_raxml.csv", "a")
 		outl.write("gene_name,no_constraint," + ",".join(constraint_list) + "\n")
+	elif args.iqtree == None and args.raxml == None and args.checkpoint == None:
+		outl = open(output_folder + "/Likelihoods_iqtree.csv", "a")
+		outl.write("gene_name,no_constraint," + ",".join(constraint_list) + "\n")
+		
 	
-	
+
 	#Easy to add in parallel processing to this part
-	if raxml == "":
+	if raxml == "" and gene_names != ",":
 		likelihood_estimation_stuff.calc_likelihood_iqtree(constraint_list, gene_names, gene_models, iqtree, threads, output_folder, outf, outl, args.verbosity)
-	else:
+	elif raxml != "" and gene_names != ",":
 		likelihood_estimation_stuff.rax_runner(constraint_list, gene_names, gene_models, raxml, threads, output_folder, outf, outl, args.verbosity)
 
 	message = "Finished running edges, getting conflicts among biparts"
+	tree_stuff.get_conflicts(output_folder)
 	Extras.get_time(message, outf)
 	
 	
