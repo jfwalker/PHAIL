@@ -230,7 +230,7 @@ def make_constraints(biparts, out_folder, outf):
 	return constraint_list
 
 
-#check to see if two bipartitions conflict with one another
+#check to see if two bipartitions conflict with one another, come in the form A,B|C,D
 def conflict_check(bipart1,bipart2):
 	
 	bi = bipart1.split("|")
@@ -240,12 +240,71 @@ def conflict_check(bipart1,bipart2):
 	bipart2_part1 = bi2[0].split(",")
 	bipart2_part2 = bi2[1][0:].split(",")
 	
-	#print str(bipart1_part2) + " comp " + str(bipart2_part2)
+	#difference between the left sides of the bipart
+	#print str(bipart1_part1) + " comp " + str(bipart2_part1)
 	
+	#remove from left, the left of one
+	dif_part1 = list(set(bipart1_part1) - set(bipart2_part1))
+	
+	#remove from left, the right of one
+	dif_part2 = list(set(bipart2_part1) - set(bipart1_part1))
+	
+
+	a = ""
+
+	#the length of the left is at 0 and it was previously the same length as
+	#the other left
+	if len(dif_part1) == 0 and len(bipart1_part1) == len(bipart2_part1):
+		
+		#print str(bipart1_part1) + " comp " + str(bipart2_part1)
+		return "identical"
+		
+	#the length of the left is at 0 and it was previously the same length as
+	#the other right. 	
+	elif len(dif_part2) == 0 and len(bipart1_part1) == len(bipart2_part2):
+		
+		#print str(bipart1_part1) + " comp " + str(bipart2_part2)
+		return "identical"
+	
+	#The difference in length of left to other left is the same as the length of the
+	#left in general. This would indicate that nothing was removed so they dont
+	#have overlap
+	elif len(dif_part1) == len(bipart1_part1):
+		
+		#print str(bipart1_part1) + " comp " + str(bipart2_part1)
+		return "no overlap"
+	
+	#The difference in length of left to other right is the same as the length of the
+	#left in general. This would indicate that nothing was removed so they dont
+	#have overlap
+	elif len(dif_part2) == len(bipart1_part2):
+		
+		#print str(bipart1_part1) + " comp " + str(bipart2_part2)
+		return "no overlap"
+	
+	elif len(dif_part1) == 0:
+		
+		return "nested"
+	
+	elif len(dif_part2) == 0:
+	
+		return "nested"
+	
+	else:
+
+		#print str(bipart1_part1) + " comp " + str(bipart2_part1)
+		#print str(bipart2_part1) + " comp " + str(bipart1_part1)
+		return "conflict"
+		
+
+#Designed to get the conflicts among the constraints
 def get_conflicts(outd):
 
 	bips = open(outd + "/bipartitions.txt", "r")
-
+	con_out = open(outd + "/conflicts.txt", "w")
+	
+	cons_and_con = []
+	
 	#parse existing bipartitions
 	b = []
 	for i in bips:
@@ -255,10 +314,20 @@ def get_conflicts(outd):
 	
 	#run all against all
 	for i in b:
-
+	
+		cons = i[0]
 		for j in b:
 		
-			conflict_check(i[1],j[1])
+			relationship = ""
+			relationship = conflict_check(i[1],j[1])
+			
+			if relationship == "conflict":
+				cons += "," + j[0]
+		cons_and_con.append(cons)
+		
+		con_out.write(cons + "\n")
+				
+				
 		
 			
 
