@@ -204,10 +204,12 @@ def main(arguments=None):
 
 	message = "Finished running edges, getting conflicts among biparts"
 	Extras.get_time(message, outf)
-	tree_stuff.get_conflicts(output_folder)
+	cons_confs = tree_stuff.get_conflicts(output_folder)
+	
 	
 	message = "Summarizing constraints by conflict, see " + output_folder + " for details"
 	Extras.get_time(message, outf)
+	#I think it's l file that should be added here
 	summarizer.divide_out_edges(outl,output_folder)
 	
 	

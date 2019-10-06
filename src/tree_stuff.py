@@ -326,6 +326,7 @@ def get_conflicts(outd):
 		cons_and_con.append(cons)
 		
 		con_out.write(cons + "\n")
+	return cons_and_con
 				
 				
 		
