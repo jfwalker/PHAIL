@@ -6,6 +6,7 @@ import Extras
 import seq_stuff
 import tree_stuff
 import likelihood_estimation_stuff
+import summarizer
 
 '''
 PHylogenetic Analysis Into Lineages
@@ -202,9 +203,12 @@ def main(arguments=None):
 		likelihood_estimation_stuff.rax_runner(constraint_list, gene_names, gene_models, raxml, threads, output_folder, outf, outl, args.verbosity)
 
 	message = "Finished running edges, getting conflicts among biparts"
-	tree_stuff.get_conflicts(output_folder)
 	Extras.get_time(message, outf)
+	tree_stuff.get_conflicts(output_folder)
 	
+	message = "Summarizing constraints by conflict, see " + output_folder + " for details"
+	Extras.get_time(message, outf)
+	summarizer.divide_out_edges(outl,output_folder)
 	
 	
 if __name__ == "__main__":
