@@ -303,7 +303,7 @@ def get_conflicts(outd):
 	bips = open(outd + "/bipartitions.txt", "r")
 	con_out = open(outd + "/conflicts.txt", "w")
 	
-	cons_and_con = []
+	cons_and_con = {}
 	
 	#parse existing bipartitions
 	b = []
@@ -315,6 +315,7 @@ def get_conflicts(outd):
 	#run all against all
 	for i in b:
 	
+		cons_and_con[i[0]] = []
 		cons = i[0]
 		for j in b:
 		
@@ -323,7 +324,7 @@ def get_conflicts(outd):
 			
 			if relationship == "conflict":
 				cons += "," + j[0]
-		cons_and_con.append(cons)
+				cons_and_con[i[0]].append(j[0])
 		
 		con_out.write(cons + "\n")
 	return cons_and_con

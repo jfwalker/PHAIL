@@ -185,12 +185,15 @@ def main(arguments=None):
 	if args.checkpoint:
 		print "Checking Likelihood file"
 	elif args.iqtree:
+
 		outl = open(output_folder + "/Likelihoods_iqtree.csv", "a")
 		outl.write("gene_name,no_constraint," + ",".join(constraint_list) + "\n")
 	elif args.raxml:
+
 		outl = open(output_folder + "/Likelihoods_raxml.csv", "a")
 		outl.write("gene_name,no_constraint," + ",".join(constraint_list) + "\n")
 	elif args.iqtree == None and args.raxml == None and args.checkpoint == None:
+
 		outl = open(output_folder + "/Likelihoods_iqtree.csv", "a")
 		outl.write("gene_name,no_constraint," + ",".join(constraint_list) + "\n")
 		
@@ -199,18 +202,23 @@ def main(arguments=None):
 	#Easy to add in parallel processing to this part
 	if raxml == "" and gene_names != ",":
 		likelihood_estimation_stuff.calc_likelihood_iqtree(constraint_list, gene_names, gene_models, iqtree, threads, output_folder, outf, outl, args.verbosity)
+		outl.close()
 	elif raxml != "" and gene_names != ",":
 		likelihood_estimation_stuff.rax_runner(constraint_list, gene_names, gene_models, raxml, threads, output_folder, outf, outl, args.verbosity)
-
+		outl.close()
 	message = "Finished running edges, getting conflicts among biparts"
 	Extras.get_time(message, outf)
 	cons_confs = tree_stuff.get_conflicts(output_folder)
 	
 	
-	message = "Summarizing constraints by conflict, see " + output_folder + " for details"
+	message = "Summarizing constraints by conflict, see " + output_folder + "/EdgeAnalyses/ for details"
 	Extras.get_time(message, outf)
 	#I think it's l file that should be added here
-	summarizer.divide_out_edges(outl,output_folder)
+	aa = summarizer.divide_out_edges(output_folder,raxml,cons_confs)
+	
+	message = "Finished processing, use tree_assembler.py for tree building"
+	Extras.get_time(message, outf)
+	
 	
 	
 if __name__ == "__main__":

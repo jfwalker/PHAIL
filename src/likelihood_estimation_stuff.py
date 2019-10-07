@@ -14,8 +14,7 @@ def no_const_iqtree(iqtree, threads, output_folder, gene_name, model):
 	if model == "DNA" or model == "AA":
 		cmd = iqtree + " -redo -nt " + threads + " -s " + output_folder + "/Fasta/" + gene_name + " -pre " + output_folder + "/iqtree_outputs/" + gene_name
 	else:
-		cmd = iqtree + " -redo -nt " + threads + " -s " + output_folder + "/Fasta/" + gene_name + " -m " + model + + " -pre " + output_folder + "/" + gene_name
-
+		cmd = iqtree + " -redo -nt " + threads + " -s " + output_folder + "/Fasta/" + gene_name + " -m " + str(model) + " -pre " + output_folder + "/iqtree_outputs/" + gene_name
 	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 	t = p.communicate()[0].split("\n")
 	for i in t:
@@ -28,7 +27,7 @@ def const_iqtree(iqtree, threads, output_folder, gene_name, model, constraint):
 	if model == "DNA" or model == "AA":
 		cmd = iqtree + " -redo -nt " + threads + " -s " + output_folder + "/Fasta/" + gene_name + " -g " + output_folder + "/Constraints/" + constraint  + " -pre " + output_folder + "/iqtree_outputs/" + gene_name + "_" + constraint
 	else:
-		cmd = iqtree + " -redo -nt " + threads + " -m " + model + " -s " + output_folder + "/Fasta/" + gene_name + " -g " + output_folder + "/Constraints/" + constraint  + " -pre " + output_folder + "/iqtree_outputs/" + gene_name + "_" + constraint
+		cmd = iqtree + " -redo -nt " + threads + " -m " + str(model) + " -s " + output_folder + "/Fasta/" + gene_name + " -g " + output_folder + "/Constraints/" + constraint  + " -pre " + output_folder + "/iqtree_outputs/" + gene_name + "_" + constraint
 	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 	t = p.communicate()[0].split("\n")
 	for i in t:
