@@ -83,7 +83,7 @@ def main(arguments=None):
 
 		
 	if args.log and args.checkpoint == None:
-		outf = open(args.logfile)	
+		outf = open(args.log, "a")	
 		#Use start as a way of ensuring the logfile is what it is
 		outf.write("-----Log File-----\n")
 		Extras.get_time("Log file made", None)

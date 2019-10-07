@@ -49,6 +49,21 @@ def divide_out_edges(outd,raxml,cons_confs):
 		get_constraint_vals(aa,array,outc)
 		outc.close()
 		
+#Takes in the likelihood file and returns it in array of arrays format		
+def get_aa_of_likefile(likefile):
+	
+	aa = []
+	l_file = open(likefile, "r")
+	for i in l_file:
+		i = i.strip("\r\n")
+		a = i.split(",")
+		aa.append(a)
+	print aa
+
+#bipartition file to a hash
+def bip_to_hash(bip):
+	print "here"
+	
 
 	
 	
