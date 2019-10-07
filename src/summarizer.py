@@ -58,13 +58,43 @@ def get_aa_of_likefile(likefile):
 		i = i.strip("\r\n")
 		a = i.split(",")
 		aa.append(a)
-	print aa
+	return aa
 
 #bipartition file to a hash
 def bip_to_hash(bip):
-	print "here"
 	
+	bip_hash = {}
+	bip_file = open(bip, "r")
+	for i in bip_file:
+		
+		j = i.split(":")
+		j[1] = j[1].replace(" ", "((")
+		j[1] = j[1].replace("|", "),")
+		j[1] = j[1].replace("\n", ");")
+		
+		bip_hash[j[0]] = j[1]
+	bip_file.close()
+	
+	return bip_hash
 
+#conflict file to a hash
+def con_to_hash(con):
+
+	con_hash = {}
+	con_file = open(con, "r")
+	
+	for i in con_file:
+		
+		i = i.strip("\n\r")
+		j = i.split(",")
+		con_hash[j[0]] = j[1:]
+	return con_hash
+
+def edge_test(aa,s):
+
+	if s == None:
+		s = 2.0
+	print s
 	
 	
 	

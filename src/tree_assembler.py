@@ -29,18 +29,23 @@ def main(arguments=None):
 	parser = generate_argparser()
 	args = parser.parse_args(arguments)
 	
+	#turns the likelihood file into an array of arrays
 	if args.like_file:
 		aa = summarizer.get_aa_of_likefile(args.like_file)
 	
+	#turns the bipartitions file into a hash, where one has the bipartition, and the
+	#values are the edge constraints
 	if args.bipartition:
 		bip_hash = summarizer.bip_to_hash(args.bipartition)
-		
+	
+	if args.conflicts:
+		con_hash = summarizer.con_to_hash(args.conflicts)
+	
 	if args.method:
 		test = args.method
-	
-	
-	if test == "edge":
-		print test
+
+		if test == "edge":
+			summarizer.edge_test(aa,args.support)
 		
 	
 	
