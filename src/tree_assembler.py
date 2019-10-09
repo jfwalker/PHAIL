@@ -19,7 +19,7 @@ def generate_argparser():
 	parser.add_argument("-c", "--conflicts", required=False, type=str, help="""
 	constraint conflicts file from PHAIL""")
 	parser.add_argument("-m", "--method", required=False, type=str, help="""
-	method of summarizing data you want to use (edge,tree)""")
+	method of summarizing data you want to use [\"edge\"",\"tree\"]""")
 	parser.add_argument("-s", "--support", required=False, type=str, help="""
 	support metric or in edge analysis cutoff""")
 	return parser
@@ -43,9 +43,18 @@ def main(arguments=None):
 	
 	if args.method:
 		test = args.method
-
+		
+		#generate the consensus trees underlying the data
+		if test == "trees":
+			summed_likelihoods = summarizer.col_like_test(aa,args.support)
+			sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
+			non_conflicting_sort = summarizer.find_noncon(sorted_likelihoods,bip_hash,con_hash)
+			
+		
+		
+		
 		if test == "edge":
-			summarizer.edge_test(aa,args.support)
+			summed_likelihoods = summarizer.col_like_test(aa,args.support)
 		
 	
 	
