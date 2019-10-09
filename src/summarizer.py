@@ -131,6 +131,7 @@ def get_tree_from_seed(seed,sorted_likelihoods,bip_hash,con_hash):
 					if j in hash:
 					
 						print "conflict is in"
+					
 					else:
 					
 						hash[i[0]] = i[1]
