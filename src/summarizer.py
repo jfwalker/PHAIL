@@ -90,11 +90,26 @@ def con_to_hash(con):
 		con_hash[j[0]] = j[1:]
 	return con_hash
 
+#things to report, sum of the difference in likelihoods, difference of best conflict
+#genes where the relationships is the best, genes where the relationship is the best by
+#at least 2
 def edge_test(aa,s):
 
+	a = []
 	if s == None:
 		s = 2.0
-	print s
+	
+	for i in aa[1:]:
+		
+		count = 0
+		for j in i[2:]:
+			
+			if len(a) == 0:
+				a = [0.0] * len(i[2:])
+			a[count] += float(j)
+			count += 1
+	print a
+			
 	
 	
 	
