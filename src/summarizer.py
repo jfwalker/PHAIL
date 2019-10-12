@@ -145,7 +145,6 @@ def get_tree_from_seed(seed,sorted_likelihoods,bip_hash,con_hash):
 
 		
 
-
 #gets the constraints ordered by their likelihood, need them to be chosen based
 #on likelihood and not conflicting with other trees
 def find_noncon(sorted_likelihoods,bip_hash,con_hash):
