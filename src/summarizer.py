@@ -1,5 +1,6 @@
 import sys
 import os
+import tree_stitcher
 
 '''
 Series of tools designed to summarise the data
@@ -91,57 +92,49 @@ def con_to_hash(con):
 	return con_hash
 
 
-#give it a constraint to start at and it will identify constraints to add in
-#while making sure they do not conflict with something in the tree
+def check_seed(seed,sls,con_hash):
+	
+	#print sls
+	stored = set()
+	stored_best_tree = {}
+	stored.add(seed[0])
+	stored_best_tree[seed[1]] = seed[0]
+	maybe_future_seeds = []
+	future_seeds = []
+	
+	#parse through in order of likelihood
+	for i in sls:
 
-#Not Working!
-def get_tree_from_seed(seed,sorted_likelihoods,bip_hash,con_hash):
-	
-
-	hash = {}
-	all_hash = {}
-	
-	#best is taken as a part
-	hash[seed[0]] = seed[1]
-	
-	
-	all_hash[seed[0]] = seed[1]
-	
-	#should be parsing through the list in order of how likely a relationship is
-	for i in sorted_likelihoods:
+		#ignore the no constraint one
+		if i[0] != "no_constraint" and i[0] != seed[0]:
 		
-		print i[0] + " " + str(i[1])
-		#ignore the seed and the no constraint
-		if i[0] not in hash and i[0] != "no_constraint":
+			#this means there is an intersection
+			if stored.intersection(con_hash[i[0]]):
 			
-			#check if it has any conflicts with current tree set
-			
-			#this would mean it has no conflicts so it can't conflict with current tree
-			#set
-			if len(con_hash[i[0]]) == 0:
+				#print "Cannot Insert: " + str(i[0]) + " value: " + str(i[1])
+				string = str(i[0]) + ":" + str(i[1])
+				maybe_future_seeds.append(string)
 				
-				hash[i[0]] = i[1]
 			
-			#This means it does have conflicts so check if those exist in tree set
+			#no intersection between the conflict and what's going in
 			else:
-				
-				#parse the pre-identified conflicts
-				for j in con_hash[i[0]]:
-					
-					if j in hash:
-					
-						print "conflict is in"
-					
-					else:
-					
-						hash[i[0]] = i[1]
-				
-					
-					
-	for i in hash:
-		print i + "and" + bip_hash[i]
+				#print "inserted: " + i[0] + " value: " + str(i[1])
+				stored.add(i[0])
+				stored_best_tree[i[1]] = i[0]
+				if len(maybe_future_seeds) != 0:
+					future_seeds.extend(maybe_future_seeds)
+					maybe_future_seeds = []
 				
 				
+	#print "The highest edge tree has: " + str(len(future_seeds)) + " edges with values higher than those placed"
+	
+	#for i,j in sorted(stored_best_tree.items(), key=lambda p:p[1]):
+	#	print "Seed " + seed[0] + " biparts: " + str(i) + " " + str(j)
+	
+	return stored_best_tree,future_seeds
+				
+			
+			
 
 		
 
@@ -158,8 +151,22 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash):
 		if i[0] != "no_constraint":
 			if count == 0:
 				seed = i
-		count += 1	
-	get_tree_from_seed(seed,sorted_likelihoods,bip_hash,con_hash)
+			count += 1
+		else:
+			#get the top likelihood value
+			best_val = i[1]
+
+	stored_best_tree,future_seeds = check_seed(seed,sorted_likelihoods,con_hash)
+	tree_stitcher.sew_it(best_val,stored_best_tree,bip_hash)
+
+	for i in future_seeds:
+		
+		other_trees,ignored = check_seed(i.split(":"),sorted_likelihoods,con_hash)
+		tree_stitcher.sew_it(best_val,other_trees,bip_hash)
+		#print other_trees
+	
+					
+	#get_tree_from_seed(seed,sorted_likelihoods,bip_hash,con_hash)
 
 
 

@@ -45,7 +45,7 @@ def main(arguments=None):
 		test = args.method
 		
 		#generate the consensus trees underlying the data
-		if test == "trees":
+		if test == "trees" or test == "tree":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
 			sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
 			non_conflicting_sort = summarizer.find_noncon(sorted_likelihoods,bip_hash,con_hash)
@@ -55,6 +55,7 @@ def main(arguments=None):
 		
 		if test == "edge":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
+			
 		
 	
 	

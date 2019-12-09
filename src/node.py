@@ -38,7 +38,7 @@ class Node:
 		return [n for n in self.iternodes() if n.istip ]
 
 	def lvsnms(self):
-		return [n.label for n in self.iternodes() if n.istip ]
+		return [n.label for n in self.iternodes() if len(n.children) == 0 ]
 
 	def iternodes(self,order="preorder"):
 		if order.lower() == "preorder":
@@ -84,3 +84,6 @@ class Node:
 					tnode = tnode.children[0]
 				h += tnode.length
 			self.height = h
+	
+	def __repr__(self):
+		return self.get_newick_repr(False)

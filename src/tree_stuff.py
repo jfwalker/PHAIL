@@ -107,6 +107,22 @@ def build(instr):
 		branch = ""
 	return root
 
+def tips(names,child):
+	
+	for x in child.children:
+		if x.children:
+			names = tips(names,x)
+		else:
+			names.append(x.label)
+	return names
+
+def get_tips(tree):
+	names = []
+	t = build(tree)
+	names = tips(names,t)
+	return names
+	
+
 
 #get segments of a bipart
 def clade_post_order(clade,clade_names):
@@ -167,7 +183,45 @@ def comp_biparts(tree_bipart,all_biparts):
 			if len(dif) == 0:
 				return True
 	return False
-	
+
+def mrca_recurs(node1,path1,node2):
+	path = path1[path1.index(node1):]
+	parent = node2
+	mrca = None
+	while parent != None:
+		if parent in path:
+			mrca = parent
+			break
+		parent = parent.parent
+	return mrca
+
+
+def get_mrca(nodes,tree):
+	traceback = []
+	first = nodes[0]
+	while first != tree:
+		first = first.parent
+		traceback.append(first)
+		if first.parent == None:
+			break
+	curmrca = nodes[0].parent
+	for i in nodes:
+		if i == nodes[0]:
+			continue
+		curmrca = mrca_recurs(curmrca,traceback,i)
+	return curmrca
+
+
+def get_mrca_wnms(names,tree):
+	nds = []
+    
+	for i in tree.leaves():
+		if i.label in names:
+			nds.append(i)
+	if len(nds) == 1:
+		return nds[0]
+	return get_mrca(nds,tree)
+
 #compare if any incoming biparts are new
 #can add in bipart counts
 def get_biparts(trees_clades, all_biparts):
