@@ -21,7 +21,9 @@ def generate_argparser():
 	parser.add_argument("-m", "--method", required=False, type=str, help="""
 	method of summarizing data you want to use [\"edge\"",\"tree\",\"tree_dist\",\"constraint_label\"]""")
 	parser.add_argument("-s", "--support", required=False, type=str, help="""
-	support metric or in edge analysis cutoff""")
+	support cutoff [to be implemented]""")
+	parser.add_argument("-f", "--force_edge", required=False, type=str, help="""
+	comma separated list of edges to be in final tree [to be implemented]""")
 	return parser
 	
 def main(arguments=None):
@@ -45,26 +47,22 @@ def main(arguments=None):
 		test = args.method
 		
 		#generate the consensus trees underlying the data
-		if test == "trees" or test == "tree":
+		if test == "trees" or test == "tree" or test == "tree_dist" or test == "constraint_label" or test == "blank":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
-			sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
-			non_conflicting_sort = summarizer.find_noncon(sorted_likelihoods,bip_hash,con_hash,test)
 			
-		if test == "tree_dist" or test == "constraint_label" or test == "blank":
-			summed_likelihoods = summarizer.col_like_test(aa,args.support)
-			sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
+			#sorts likelihoods but forces specified ones to the top
+			if args.force_edge:
+				array = args.force_edge.split(",")
+				sorted_likelihoods = summarizer.sort_largest_force(array,summed_likelihoods)
+			else:
+				sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
 			non_conflicting_sort = summarizer.find_noncon(sorted_likelihoods,bip_hash,con_hash,test)
-		
 		
 		if test == "edge":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
 			sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
 			for x in sorted_likelihoods:
 				print x
-			
-		
-	
-	
 
 
 
