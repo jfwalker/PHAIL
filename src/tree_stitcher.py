@@ -1,6 +1,11 @@
 import sys
 import node
 import tree_stuff
+'''
+Ugh...So much laziness, I need to rewrite this
+'''
+
+
 
 def get_left(nd,lvs):
 	
@@ -16,11 +21,11 @@ def get_left(nd,lvs):
 
 
 #Lazy repeat of below
-def sew_it2(ML_val,branches,bip_hash):
+def sew_it2(ML_val,branches,bip_hash,test):
 
 	maintree = node.Node()
 	names = []
-	
+
 	#get the names
 	names = tree_stuff.get_tips(bip_hash.itervalues().next())
 	lvs = set(names)
@@ -36,7 +41,13 @@ def sew_it2(ML_val,branches,bip_hash):
 		nd = node.Node()
 		nd = tree_stuff.build(bip_hash[branches[i]])
 		temp,temp_r = get_left(nd,lvs)
-		diffval = ML_val - i
+		
+		if test == "tree_dist":
+			diffval = ML_val - float(i)
+		elif test == "constraint_label":
+			diffval = branches[i]
+		elif test == "blank":
+			diffval = ""
 		temp = "(" + ",".join(temp) + ")" + str(diffval) + ";"
 		temp_r = "(" + ",".join(temp_r) + ")" + str(diffval) + ";"
 		x = tree_stuff.build(temp)

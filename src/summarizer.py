@@ -163,8 +163,8 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
 		tree_stitcher.sew_it(best_val,stored_best_tree,bip_hash)
 	
 	#gives the difference between the best and the constraint
-	if test == "tree_diff":
-		tree_stitcher.sew_it2(best_val,stored_best_tree,bip_hash)
+	if test == "tree_dist" or test == "constraint_label" or test == "blank":
+		tree_stitcher.sew_it2(best_val,stored_best_tree,bip_hash,test)
 
 	for i in future_seeds:
 		
@@ -174,11 +174,10 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
 		if test == "tree" or test == "trees":
 			tree_stitcher.sew_it(best_val,other_trees,bip_hash)
 		
-		if test == "tree_diff":
-			tree_stitcher.sew_it2(best_val,stored_best_tree,bip_hash)
+		if test == "tree_dist" or test == "constraint_label" or test == "blank":
+			tree_stitcher.sew_it2(best_val,other_trees,bip_hash,test)
 		#print other_trees
 	
-					
 	#get_tree_from_seed(seed,sorted_likelihoods,bip_hash,con_hash)
 
 

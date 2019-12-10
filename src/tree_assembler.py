@@ -19,7 +19,7 @@ def generate_argparser():
 	parser.add_argument("-c", "--conflicts", required=False, type=str, help="""
 	constraint conflicts file from PHAIL""")
 	parser.add_argument("-m", "--method", required=False, type=str, help="""
-	method of summarizing data you want to use [\"edge\"",\"tree\",\"tree_diff\"]""")
+	method of summarizing data you want to use [\"edge\"",\"tree\",\"tree_dist\",\"constraint_label\"]""")
 	parser.add_argument("-s", "--support", required=False, type=str, help="""
 	support metric or in edge analysis cutoff""")
 	return parser
@@ -50,10 +50,11 @@ def main(arguments=None):
 			sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
 			non_conflicting_sort = summarizer.find_noncon(sorted_likelihoods,bip_hash,con_hash,test)
 			
-		if test == "tree_diff":
+		if test == "tree_dist" or test == "constraint_label" or test == "blank":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
 			sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
 			non_conflicting_sort = summarizer.find_noncon(sorted_likelihoods,bip_hash,con_hash,test)
+		
 		
 		if test == "edge":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
