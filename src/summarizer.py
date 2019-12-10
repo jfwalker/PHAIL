@@ -140,7 +140,7 @@ def check_seed(seed,sls,con_hash):
 
 #gets the constraints ordered by their likelihood, need them to be chosen based
 #on likelihood and not conflicting with other trees
-def find_noncon(sorted_likelihoods,bip_hash,con_hash):
+def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
 
 	count = 0
 	#get starting seeds (edges with the highest likelihoods), and those that start with
@@ -157,13 +157,25 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash):
 			best_val = i[1]
 
 	stored_best_tree,future_seeds = check_seed(seed,sorted_likelihoods,con_hash)
-	tree_stitcher.sew_it(best_val,stored_best_tree,bip_hash)
+	
+	#gives a tree with the likelihood painted on it
+	if test == "tree" or test == "trees":
+		tree_stitcher.sew_it(best_val,stored_best_tree,bip_hash)
+	
+	#gives the difference between the best and the constraint
+	if test == "tree_diff":
+		tree_stitcher.sew_it2(best_val,stored_best_tree,bip_hash)
 
 	for i in future_seeds:
 		
 		#
 		other_trees,ignored = check_seed(i.split(":"),sorted_likelihoods,con_hash)
-		tree_stitcher.sew_it(best_val,other_trees,bip_hash)
+		
+		if test == "tree" or test == "trees":
+			tree_stitcher.sew_it(best_val,other_trees,bip_hash)
+		
+		if test == "tree_diff":
+			tree_stitcher.sew_it2(best_val,stored_best_tree,bip_hash)
 		#print other_trees
 	
 					
