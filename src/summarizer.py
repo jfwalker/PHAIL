@@ -207,18 +207,25 @@ def sort_largest(summed_likelihoods):
 
 #take in an array where 0 is constraints and 1 is likelihoods and sort them by
 #highest value
-def sort_largest_force(forces,summed_likelihoods):
+def sort_largest_force(forces,summed_likelihoods,con_hash):
 
+	
 	ordered = []
 	hash = {}
 	front_array = []
+	rm_hash = {}
 	ordered = sort_largest(summed_likelihoods)
 	for x in forces:
 		hash[x] = x
+		for y in con_hash[x]:
+			rm_hash[y] = y
 	for x in ordered:
 		if x[0] in hash:
 			ordered.remove(x)
 			ordered[:0] = [x]
+		if x[0] in rm_hash:
+			ordered.remove(x)
+
 	return ordered
 			
 

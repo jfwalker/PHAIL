@@ -23,7 +23,7 @@ def generate_argparser():
 	parser.add_argument("-s", "--support", required=False, type=str, help="""
 	support cutoff [to be implemented]""")
 	parser.add_argument("-f", "--force_edge", required=False, type=str, help="""
-	comma separated list of edges to be in final tree [to be implemented]""")
+	comma separated list of edges to be in final tree""")
 	return parser
 	
 def main(arguments=None):
@@ -53,7 +53,7 @@ def main(arguments=None):
 			#sorts likelihoods but forces specified ones to the top
 			if args.force_edge:
 				array = args.force_edge.split(",")
-				sorted_likelihoods = summarizer.sort_largest_force(array,summed_likelihoods)
+				sorted_likelihoods = summarizer.sort_largest_force(array,summed_likelihoods,con_hash)
 			else:
 				sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
 			non_conflicting_sort = summarizer.find_noncon(sorted_likelihoods,bip_hash,con_hash,test)
