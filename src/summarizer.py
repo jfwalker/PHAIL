@@ -129,7 +129,7 @@ def check_seed(seed,sls,con_hash):
 	#print "The highest edge tree has: " + str(len(future_seeds)) + " edges with values higher than those placed"
 	
 	#for i,j in sorted(stored_best_tree.items(), key=lambda p:p[1]):
-	#	print "Seed " + seed[0] + " biparts: " + str(i) + " " + str(j)
+		#print "Seed " + seed[0] + " biparts: " + str(i) + " " + str(j)
 	
 	return stored_best_tree,future_seeds
 				
@@ -161,6 +161,7 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash):
 
 	for i in future_seeds:
 		
+		#
 		other_trees,ignored = check_seed(i.split(":"),sorted_likelihoods,con_hash)
 		tree_stitcher.sew_it(best_val,other_trees,bip_hash)
 		#print other_trees

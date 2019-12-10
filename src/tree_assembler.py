@@ -55,6 +55,9 @@ def main(arguments=None):
 		
 		if test == "edge":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
+			sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
+			for x in sorted_likelihoods:
+				print x
 			
 		
 	
