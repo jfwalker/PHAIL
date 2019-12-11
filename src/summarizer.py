@@ -135,7 +135,15 @@ def check_seed(seed,sls,con_hash):
 				
 			
 			
-
+#Need a quick program to flip key and value and don't know where to put it
+def key_flip(hash):
+	new_hash = {}
+	for x in hash:
+		if x in new_hash:
+			new_hash[x].append[hash[x]]
+		else:
+			new_hash[hash[x]] = x
+	return new_hash
 		
 
 #gets the constraints ordered by their likelihood, need them to be chosen based
@@ -158,6 +166,13 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
 
 	stored_best_tree,future_seeds = check_seed(seed,sorted_likelihoods,con_hash)
 	
+	flipped_best_tree = key_flip(stored_best_tree)
+	
+	Abundant_Edge_Tree = {}
+	
+	for x in flipped_best_tree:
+		Abundant_Edge_Tree[x] = 0
+
 	#gives a tree with the likelihood painted on it
 	if test == "tree" or test == "trees":
 		tree_stitcher.sew_it(best_val,stored_best_tree,bip_hash)
@@ -165,17 +180,37 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
 	#gives the difference between the best and the constraint
 	if test == "tree_dist" or test == "constraint_label" or test == "blank":
 		tree_stitcher.sew_it2(best_val,stored_best_tree,bip_hash,test)
-
+	
 	for i in future_seeds:
 		
+		other_best_tree = {}
 		#
 		other_trees,ignored = check_seed(i.split(":"),sorted_likelihoods,con_hash)
+		
+		other_best_tree = key_flip(other_trees)
 		
 		if test == "tree" or test == "trees":
 			tree_stitcher.sew_it(best_val,other_trees,bip_hash)
 		
 		if test == "tree_dist" or test == "constraint_label" or test == "blank":
 			tree_stitcher.sew_it2(best_val,other_trees,bip_hash,test)
+		
+		for x in other_best_tree:
+			if x in Abundant_Edge_Tree:
+				Abundant_Edge_Tree[x] += 1
+			else:
+				Abundant_Edge_Tree[x] = 0
+	
+	ME_tree = {}
+	for i in Abundant_Edge_Tree:
+	
+		if Abundant_Edge_Tree[i] == len(future_seeds):
+			ME_tree[flipped_best_tree[i]] = i
+
+	if test == "tree" or test == "trees":
+		tree_stitcher.sew_it(best_val,ME_tree,bip_hash)
+	if test == "tree_dist" or test == "constraint_label" or test == "blank":
+		tree_stitcher.sew_it2(best_val,ME_tree,bip_hash,test)
 		#print other_trees
 	
 	#get_tree_from_seed(seed,sorted_likelihoods,bip_hash,con_hash)
