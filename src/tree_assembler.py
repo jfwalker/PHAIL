@@ -19,7 +19,7 @@ def generate_argparser():
 	parser.add_argument("-c", "--conflicts", required=False, type=str, help="""
 	constraint conflicts file from PHAIL""")
 	parser.add_argument("-m", "--method", required=False, type=str, help="""
-	method of summarizing data you want to use [\"edge\"",\"tree\",\"tree_dist\",\"constraint_label\"]""")
+	method of summarizing data you want to use [\"edge\"",\"tree\",\"tree_dist\",\"constraint_label\",\"blank\"]""")
 	parser.add_argument("-s", "--support", required=False, type=str, help="""
 	support cutoff [to be implemented]""")
 	parser.add_argument("-f", "--force_edge", required=False, type=str, help="""
@@ -61,8 +61,12 @@ def main(arguments=None):
 		if test == "edge":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
 			sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
+			
 			for x in sorted_likelihoods:
-				print x
+				if x[0] != "no_constraint":
+					print str(x) + " " + bip_hash[x[0]]
+				else:
+					print str(x)
 
 
 
