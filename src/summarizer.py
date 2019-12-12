@@ -160,7 +160,7 @@ def get_best_constraint(array, other_array):
 
 #gets the constraints ordered by their likelihood, need them to be chosen based
 #on likelihood and not conflicting with other trees
-def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
+def find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test):
 
 	count = 0
 	#get starting seeds (edges with the highest likelihoods), and those that start with
@@ -196,13 +196,21 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
 	
 	second_best = 0.0
 	inverted = {}
-	if test == "2_con":
+
+	if test == "2_con" or test == "2_con_gene" or test == "con_b":
 
 		for x in flipped_best_tree:
 			if len(con_hash[x]) != 0:
-				diff = 0.0
-				second_best = get_best_constraint(con_hash[x],sorted_likelihoods)
-				diff = flipped_best_tree[x] - second_best
+				
+				if test == "con_b":
+					diff = 0
+					diff = len(con_hash[x])
+				else:
+					diff = 0.0
+					second_best = get_best_constraint(con_hash[x],sorted_likelihoods)
+					diff = flipped_best_tree[x] - second_best
+					if test == "2_con_gene":
+						diff = float(diff) / float(genes)
 			else:
 				diff = ""
 			
@@ -225,12 +233,19 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
 			tree_stitcher.sew_it2(best_val,other_trees,bip_hash,test)
 		
 		inverted = {}
-		if test == "2_con":
+		if test == "2_con" or test == "2_con_gene" or test == "con_b":
 			for x in other_best_tree:
 				if len(con_hash[x]) != 0:
-					diff = 0.0
-					second_best = get_best_constraint(con_hash[x],sorted_likelihoods)
-					diff = float(other_best_tree[x]) - second_best
+				
+					if test == "con_b":
+						diff = 0
+						diff = len(con_hash[x])
+					else:
+						diff = 0.0
+						second_best = get_best_constraint(con_hash[x],sorted_likelihoods)
+						diff = float(other_best_tree[x]) - second_best
+						if test == "2_con_gene":
+							diff = float(diff) / float(genes)
 				else:
 					diff = ""
 				inverted[x] = diff
@@ -256,12 +271,19 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
 		tree_stitcher.sew_it2(best_val,ME_tree,bip_hash,test)
 		#print other_trees
 	inverted = {}
-	if test == "2_con":
+	if test == "2_con" or test == "2_con_gene" or test == "con_b":
 		for x in ME_tree:
 			
 			if len(con_hash[ME_tree[x]]) != 0:
-				second_best = get_best_constraint(con_hash[ME_tree[x]],sorted_likelihoods)
-				diff = flipped_best_tree[ME_tree[x]] - second_best
+			
+				if test == "con_b":
+					diff = 0
+					diff = len(con_hash[ME_tree[x]])
+				else:
+					second_best = get_best_constraint(con_hash[ME_tree[x]],sorted_likelihoods)
+					diff = flipped_best_tree[ME_tree[x]] - second_best
+					if test == "2_con_gene":
+						diff = float(diff) / float(genes)
 			else:
 				diff = ""
 			inverted[ME_tree[x]] = diff

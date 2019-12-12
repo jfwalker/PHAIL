@@ -39,7 +39,7 @@ def sew_it2(ML_val,branches,bip_hash,test):
 	#put trees into an array
 	for i in branches:
 		
-		if test == "2_con":
+		if test == "2_con" or test == "2_con_gene" or test == "con_b":
 			nd = node.Node()
 			nd = tree_stuff.build(bip_hash[i])
 			temp,temp_r = get_left(nd,lvs)
@@ -52,7 +52,7 @@ def sew_it2(ML_val,branches,bip_hash,test):
 			diffval = ML_val - float(i)
 		elif test == "constraint_label":
 			diffval = branches[i]
-		elif test == "2_con":
+		elif test == "2_con" or test == "2_con_gene" or test == "con_b":
 			diffval = branches[i]
 		elif test == "blank":
 			diffval = ""

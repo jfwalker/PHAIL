@@ -34,6 +34,7 @@ def main(arguments=None):
 	#turns the likelihood file into an array of arrays
 	if args.like_file:
 		aa = summarizer.get_aa_of_likefile(args.like_file)
+		genes = len(aa) - 1
 	
 	#turns the bipartitions file into a hash, where one has the bipartition, and the
 	#values are the edge constraints
@@ -47,7 +48,8 @@ def main(arguments=None):
 		test = args.method
 		
 		#generate the consensus trees underlying the data
-		if test == "trees" or test == "tree" or test == "tree_dist" or test == "constraint_label" or test == "blank" or test == "2_con":
+		if test == "trees" or test == "tree" or test == "tree_dist" or test == "constraint_label" or test == "blank" \
+		or test == "2_con" or test == "2_con_gene" or test == "con_b":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
 			
 			#sorts likelihoods but forces specified ones to the top
@@ -56,7 +58,7 @@ def main(arguments=None):
 				sorted_likelihoods = summarizer.sort_largest_force(array,summed_likelihoods,con_hash)
 			else:
 				sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
-			non_conflicting_sort = summarizer.find_noncon(sorted_likelihoods,bip_hash,con_hash,test)
+			non_conflicting_sort = summarizer.find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test)
 		
 		if test == "edge":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
