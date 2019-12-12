@@ -38,13 +38,21 @@ def sew_it2(ML_val,branches,bip_hash,test):
 	
 	#put trees into an array
 	for i in branches:
-		nd = node.Node()
-		nd = tree_stuff.build(bip_hash[branches[i]])
-		temp,temp_r = get_left(nd,lvs)
+		
+		if test == "2_con":
+			nd = node.Node()
+			nd = tree_stuff.build(bip_hash[i])
+			temp,temp_r = get_left(nd,lvs)
+		else:
+			nd = node.Node()
+			nd = tree_stuff.build(bip_hash[branches[i]])
+			temp,temp_r = get_left(nd,lvs)
 		
 		if test == "tree_dist":
 			diffval = ML_val - float(i)
 		elif test == "constraint_label":
+			diffval = branches[i]
+		elif test == "2_con":
 			diffval = branches[i]
 		elif test == "blank":
 			diffval = ""

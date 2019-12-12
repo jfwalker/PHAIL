@@ -19,7 +19,7 @@ def generate_argparser():
 	parser.add_argument("-c", "--conflicts", required=False, type=str, help="""
 	constraint conflicts file from PHAIL""")
 	parser.add_argument("-m", "--method", required=False, type=str, help="""
-	method of summarizing data you want to use [\"edge\"",\"tree\",\"tree_dist\",\"constraint_label\",\"blank\"]""")
+	method of summarizing data you want to use [\"edge\"",\"tree\",\"tree_dist\",\"constraint_label\",\"blank\",\"2_con\"]""")
 	parser.add_argument("-s", "--support", required=False, type=str, help="""
 	support cutoff [to be implemented]""")
 	parser.add_argument("-f", "--force_edge", required=False, type=str, help="""
@@ -47,7 +47,7 @@ def main(arguments=None):
 		test = args.method
 		
 		#generate the consensus trees underlying the data
-		if test == "trees" or test == "tree" or test == "tree_dist" or test == "constraint_label" or test == "blank":
+		if test == "trees" or test == "tree" or test == "tree_dist" or test == "constraint_label" or test == "blank" or test == "2_con":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
 			
 			#sorts likelihoods but forces specified ones to the top

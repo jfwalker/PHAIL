@@ -145,6 +145,18 @@ def key_flip(hash):
 			new_hash[hash[x]] = x
 	return new_hash
 		
+#for an array of constraints get the best one
+def get_best_constraint(array, other_array):
+	
+	hash = {}
+	for x in array:
+		hash[x] = x
+
+	for x in other_array:
+		if x[0] in hash:
+			return x[1]
+			break
+		
 
 #gets the constraints ordered by their likelihood, need them to be chosen based
 #on likelihood and not conflicting with other trees
@@ -168,6 +180,7 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
 	
 	flipped_best_tree = key_flip(stored_best_tree)
 	
+	
 	Abundant_Edge_Tree = {}
 	
 	for x in flipped_best_tree:
@@ -180,6 +193,22 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
 	#gives the difference between the best and the constraint
 	if test == "tree_dist" or test == "constraint_label" or test == "blank":
 		tree_stitcher.sew_it2(best_val,stored_best_tree,bip_hash,test)
+	
+	second_best = 0.0
+	inverted = {}
+	if test == "2_con":
+
+		for x in flipped_best_tree:
+			if len(con_hash[x]) != 0:
+				diff = 0.0
+				second_best = get_best_constraint(con_hash[x],sorted_likelihoods)
+				diff = flipped_best_tree[x] - second_best
+			else:
+				diff = ""
+			
+			inverted[x] = str(diff)
+		tree_stitcher.sew_it2(best_val,inverted,bip_hash,test)
+	
 	
 	for i in future_seeds:
 		
@@ -194,6 +223,20 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
 		
 		if test == "tree_dist" or test == "constraint_label" or test == "blank":
 			tree_stitcher.sew_it2(best_val,other_trees,bip_hash,test)
+		
+		inverted = {}
+		if test == "2_con":
+			for x in other_best_tree:
+				if len(con_hash[x]) != 0:
+					diff = 0.0
+					second_best = get_best_constraint(con_hash[x],sorted_likelihoods)
+					diff = float(other_best_tree[x]) - second_best
+				else:
+					diff = ""
+				inverted[x] = diff
+				
+			tree_stitcher.sew_it2(best_val,inverted,bip_hash,test)
+		
 		
 		for x in other_best_tree:
 			if x in Abundant_Edge_Tree:
@@ -212,7 +255,18 @@ def find_noncon(sorted_likelihoods,bip_hash,con_hash,test):
 	if test == "tree_dist" or test == "constraint_label" or test == "blank":
 		tree_stitcher.sew_it2(best_val,ME_tree,bip_hash,test)
 		#print other_trees
-	
+	inverted = {}
+	if test == "2_con":
+		for x in ME_tree:
+			
+			if len(con_hash[ME_tree[x]]) != 0:
+				second_best = get_best_constraint(con_hash[ME_tree[x]],sorted_likelihoods)
+				diff = flipped_best_tree[ME_tree[x]] - second_best
+			else:
+				diff = ""
+			inverted[ME_tree[x]] = diff
+		
+		tree_stitcher.sew_it2(best_val,inverted,bip_hash,test)
 	#get_tree_from_seed(seed,sorted_likelihoods,bip_hash,con_hash)
 
 
