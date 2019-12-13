@@ -19,7 +19,7 @@ def generate_argparser():
 	parser.add_argument("-c", "--conflicts", required=False, type=str, help="""
 	constraint conflicts file from PHAIL""")
 	parser.add_argument("-m", "--method", required=False, type=str, help="""
-	method of summarizing data you want to use [\"edge\"",\"tree\",\"tree_dist\",\"constraint_label\",\"blank\",\"2_con\",\"2_con_gene",\"con_b\",\"conflict\"]""")
+	method of summarizing data you want to use [\"edge\"",\"edge_con\",\"tree\",\"tree_dist\",\"constraint_label\",\"blank\",\"2_con\",\"2_con_gene",\"con_b\",\"conflict\"]""")
 	parser.add_argument("-s", "--support", required=False, type=str, help="""
 	support cutoff [to be implemented]""")
 	parser.add_argument("-f", "--force_edge", required=False, type=str, help="""
@@ -30,6 +30,7 @@ def main(arguments=None):
 	
 	parser = generate_argparser()
 	args = parser.parse_args(arguments)
+	
 	
 	#turns the likelihood file into an array of arrays
 	if args.like_file:
@@ -61,10 +62,10 @@ def main(arguments=None):
 				
 				else:
 					print "'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
-					print "You've specified conflict but no support, I would recommend 2.0 but I      "
-					print "don't want to impose anything. So go with what you think is best. Keep     "
-					print "in mind this is not the same as number of genes conflicting on an ML tree. "
-					print "This is number of genes where the constraint is at X cutoff better.        "
+					print "You've specified conflict but no support, I would recommend 2.0 but I     \'"
+					print "don't want to impose anything. So go with what you think is best. Keep    \'"
+					print "in mind this is not the same as number of genes conflicting on an ML tree.\'"
+					print "This is number of genes where the constraint is at X cutoff better.       \'"
 					print "'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
 					sys.exit()
 			#sorts likelihoods but forces specified ones to the top
@@ -76,17 +77,34 @@ def main(arguments=None):
 			non_conflicting_sort = summarizer.find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test,gene_count_hash)
 		
 		
-		if test == "edge":
+		elif test == "edge":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
 			sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
 			
 			for x in sorted_likelihoods:
 				if x[0] != "no_constraint":
 					print str(x) + " " + bip_hash[x[0]]
-				else:
+				else:		
 					print str(x)
-
-
+		elif test == "edge_con":
+			if args.support:
+				summed_likelihoods = summarizer.col_like_test(aa,args.support)
+				sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
+				gene_count_hash = summarizer.get_gene_sums_all(aa,con_hash,args.support)
+				
+				for x in sorted_likelihoods:
+					if x[0] != "no_constraint":
+						print str(x[0]) + ":" + str(bip_hash[x[0]]).strip(";").split(")")[0] + ")" + str(gene_count_hash[x[0]]) + str(bip_hash[x[0]]).strip(";").split(")")[1] + ");"
+			
+			else:
+				print "need a support value"
+		
+		
+		else:
+			print "Not a valid option, for options try running: python " + str(sys.argv[0]) + " -h"
+	else:
+	
+		print "Need to add (-m), for options try running: python " + str(sys.argv[0]) + " -h"
 
 if __name__ == "__main__":
 	main()
