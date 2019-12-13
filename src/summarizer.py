@@ -160,7 +160,7 @@ def get_best_constraint(array, other_array):
 
 #gets the constraints ordered by their likelihood, need them to be chosen based
 #on likelihood and not conflicting with other trees
-def find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test):
+def find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test,gene_count_hash):
 
 	count = 0
 	#get starting seeds (edges with the highest likelihoods), and those that start with
@@ -192,7 +192,10 @@ def find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test):
 	
 	#gives the difference between the best and the constraint
 	if test == "tree_dist" or test == "constraint_label" or test == "blank":
-		tree_stitcher.sew_it2(best_val,stored_best_tree,bip_hash,test)
+		tree_stitcher.sew_it2(best_val,stored_best_tree,bip_hash,test,gene_count_hash)
+	
+	if test == "conflict":
+		tree_stitcher.sew_it2(best_val,stored_best_tree,bip_hash,test,gene_count_hash)
 	
 	second_best = 0.0
 	inverted = {}
@@ -215,7 +218,7 @@ def find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test):
 				diff = ""
 			
 			inverted[x] = str(diff)
-		tree_stitcher.sew_it2(best_val,inverted,bip_hash,test)
+		tree_stitcher.sew_it2(best_val,inverted,bip_hash,test,gene_count_hash)
 	
 	
 	for i in future_seeds:
@@ -230,7 +233,10 @@ def find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test):
 			tree_stitcher.sew_it(best_val,other_trees,bip_hash)
 		
 		if test == "tree_dist" or test == "constraint_label" or test == "blank":
-			tree_stitcher.sew_it2(best_val,other_trees,bip_hash,test)
+			tree_stitcher.sew_it2(best_val,other_trees,bip_hash,test,gene_count_hash)
+		
+		if test == "conflict":
+			tree_stitcher.sew_it2(best_val,other_trees,bip_hash,test,gene_count_hash)
 		
 		inverted = {}
 		if test == "2_con" or test == "2_con_gene" or test == "con_b":
@@ -250,7 +256,7 @@ def find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test):
 					diff = ""
 				inverted[x] = diff
 				
-			tree_stitcher.sew_it2(best_val,inverted,bip_hash,test)
+			tree_stitcher.sew_it2(best_val,inverted,bip_hash,test,gene_count_hash)
 		
 		
 		for x in other_best_tree:
@@ -268,8 +274,10 @@ def find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test):
 	if test == "tree" or test == "trees":
 		tree_stitcher.sew_it(best_val,ME_tree,bip_hash)
 	if test == "tree_dist" or test == "constraint_label" or test == "blank":
-		tree_stitcher.sew_it2(best_val,ME_tree,bip_hash,test)
+		tree_stitcher.sew_it2(best_val,ME_tree,bip_hash,test,gene_count_hash)
 		#print other_trees
+	if test == "conflict":
+		tree_stitcher.sew_it2(best_val,ME_tree,bip_hash,test,gene_count_hash)
 	inverted = {}
 	if test == "2_con" or test == "2_con_gene" or test == "con_b":
 		for x in ME_tree:
@@ -288,7 +296,7 @@ def find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test):
 				diff = ""
 			inverted[ME_tree[x]] = diff
 		
-		tree_stitcher.sew_it2(best_val,inverted,bip_hash,test)
+		tree_stitcher.sew_it2(best_val,inverted,bip_hash,test,gene_count_hash)
 	#get_tree_from_seed(seed,sorted_likelihoods,bip_hash,con_hash)
 
 
@@ -360,8 +368,58 @@ def col_like_test(aa,s):
 	likesum.append(a)
 	return likesum
 
+#summarizes the genes to get how many support and by how much
+#first in the constraints array is the one of interest
+def get_genes_conflict(aa,constraints,support_val):
+
+	count = 0
+	for i in aa[1:]:
+		test_const = float(i[constraints[0]])
+		informative = "Yes"
+		diff = 0.0
+		for x in constraints[1:]:
+
+			diff = test_const - float(i[x])
+			
+			if test_const <= float(i[x]): 
+
+				informative = "No"
+				
+			if abs(diff) <= float(support_val):
+				informative = "No"
+		
+		#print the info for every gene
+		#print i[0]
+		
+		if informative == "Yes":
+			count += 1
+	return count
+		#break
+		
 
 
+#this is designed to get the number of genes each constraint is at least X lnl
+#better than the next best constraint
+def get_gene_sums_all(aa,con_hash,support_val):
+	
+	#As it is not sorted the first two should be gene name and no_constraint
+	gene_count_hash = {}
+	
+	
+	for x in aa[0][2:]:
+	
+		constraints_to_test = []
+		constraints_to_test.append(aa[0].index(x))
+		
+		for i in con_hash[x]:
+			constraints_to_test.append(aa[0].index(i))
+
+		counts = get_genes_conflict(aa,constraints_to_test,support_val)
+		gene_count_hash[x] = counts	
+	
+	return gene_count_hash
+			
+		
 
 
 

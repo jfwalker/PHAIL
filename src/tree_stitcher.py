@@ -21,7 +21,7 @@ def get_left(nd,lvs):
 
 
 #Lazy repeat of below
-def sew_it2(ML_val,branches,bip_hash,test):
+def sew_it2(ML_val,branches,bip_hash,test,gene_count_hash):
 
 	maintree = node.Node()
 	names = []
@@ -56,6 +56,8 @@ def sew_it2(ML_val,branches,bip_hash,test):
 			diffval = branches[i]
 		elif test == "blank":
 			diffval = ""
+		elif test == "conflict":	
+			diffval = gene_count_hash[branches[i]]
 		temp = "(" + ",".join(temp) + ")" + str(diffval) + ";"
 		temp_r = "(" + ",".join(temp_r) + ")" + str(diffval) + ";"
 		x = tree_stuff.build(temp)
