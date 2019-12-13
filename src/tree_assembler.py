@@ -54,26 +54,26 @@ def main(arguments=None):
 		or test == "2_con" or test == "2_con_gene" or test == "con_b" or test == "conflict":
 			summed_likelihoods = summarizer.col_like_test(aa,args.support)
 		
-		if test == "conflict":
-			if args.support:
+			if test == "conflict":
+				if args.support:
 				
-				gene_count_hash = summarizer.get_gene_sums_all(aa,con_hash,args.support)
+					gene_count_hash = summarizer.get_gene_sums_all(aa,con_hash,args.support)
 				
-			else:
-				print "'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
-				print "You've specified conflict but no support, I would recommend 2.0 but I      "
-				print "don't want to impose anything. So go with what you think is best. Keep     "
-				print "in mind this is not the same as number of genes conflicting on an ML tree. "
-				print "This is number of genes where the constraint is at X cutoff better.        "
-				print "'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
-				sys.exit()
+				else:
+					print "'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
+					print "You've specified conflict but no support, I would recommend 2.0 but I      "
+					print "don't want to impose anything. So go with what you think is best. Keep     "
+					print "in mind this is not the same as number of genes conflicting on an ML tree. "
+					print "This is number of genes where the constraint is at X cutoff better.        "
+					print "'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
+					sys.exit()
 			#sorts likelihoods but forces specified ones to the top
-		if args.force_edge:
-			array = args.force_edge.split(",")
-			sorted_likelihoods = summarizer.sort_largest_force(array,summed_likelihoods,con_hash)
-		else:
-			sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
-		non_conflicting_sort = summarizer.find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test,gene_count_hash)
+			if args.force_edge:
+				array = args.force_edge.split(",")
+				sorted_likelihoods = summarizer.sort_largest_force(array,summed_likelihoods,con_hash)
+			else:
+				sorted_likelihoods = summarizer.sort_largest(summed_likelihoods)
+			non_conflicting_sort = summarizer.find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test,gene_count_hash)
 		
 		
 		if test == "edge":
