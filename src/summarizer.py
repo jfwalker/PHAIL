@@ -211,7 +211,10 @@ def find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test,gene_count_hash)
 				else:
 					diff = 0.0
 					second_best = get_best_constraint(con_hash[x],sorted_likelihoods)
-					diff = flipped_best_tree[x] - second_best
+					if second_best:
+						diff = float(flipped_best_tree[x]) - float(second_best)
+					else:
+						diff = 0
 					if test == "2_con_gene":
 						diff = float(diff) / float(genes)
 			else:
@@ -249,7 +252,10 @@ def find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test,gene_count_hash)
 					else:
 						diff = 0.0
 						second_best = get_best_constraint(con_hash[x],sorted_likelihoods)
-						diff = float(other_best_tree[x]) - second_best
+						if second_best:
+							diff = float(other_best_tree[x]) - second_best
+						else:
+							diff = 0.0
 						if test == "2_con_gene":
 							diff = float(diff) / float(genes)
 				else:
@@ -288,8 +294,12 @@ def find_noncon(genes,sorted_likelihoods,bip_hash,con_hash,test,gene_count_hash)
 					diff = 0
 					diff = len(con_hash[ME_tree[x]])
 				else:
+					diff = 0.0
 					second_best = get_best_constraint(con_hash[ME_tree[x]],sorted_likelihoods)
-					diff = flipped_best_tree[ME_tree[x]] - second_best
+					if second_best:
+						diff = flipped_best_tree[ME_tree[x]] - second_best
+					else:
+						diff = 0.0
 					if test == "2_con_gene":
 						diff = float(diff) / float(genes)
 			else:
@@ -335,16 +345,19 @@ def sort_largest_force(forces,summed_likelihoods,con_hash):
 	rm_hash = {}
 	ordered = sort_largest(summed_likelihoods)
 	for x in forces:
+
 		hash[x] = x
-		for y in con_hash[x]:
-			rm_hash[y] = y
+		#for y in con_hash[x]:
+		#	rm_hash[y] = y
 	for x in ordered:
+
 		if x[0] in hash:
 			ordered.remove(x)
 			ordered[:0] = [x]
 		if x[0] in rm_hash:
 			ordered.remove(x)
-
+	#print ordered
+	#sys.exit()
 	return ordered
 			
 
