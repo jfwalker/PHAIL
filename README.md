@@ -5,6 +5,11 @@ Under development
 
 EdgeTest.py has been moved to the repo [EdgeTest](https://github.com/jfwalker/EdgeTest/)
 
+## Important Note about iqtree2
+If you are using iqtree2 PHAIL is now reporting the likelihood for the fast likelihood tree search using GTR+I+G mode, I'll be editing it shortly to report the likelihood from the full search
+
+
+
 Basic info: This is a program to evaluate all edges and then consolidate them into a tree. This also provides a variety of summary statistics that let you investigate how similar one edge is to another.
 
 As of right now the program will only work on complete datasets (e.g complete gene occupancy for all taxa)
