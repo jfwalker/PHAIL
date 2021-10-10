@@ -18,8 +18,9 @@ def no_const_iqtree(iqtree, threads, output_folder, gene_name, model):
 	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 	t = p.communicate()[0].split("\n")
 	for i in t:
-		if i[0:23] == "Optimal log-likelihood:":
-			return str(i[24:])
+		#if i[0:23] == "Optimal log-likelihood:":
+		if i[0:18] == "BEST SCORE FOUND :":
+			return str(i[19:])
 
 #calculate likelihood without the constraint
 def const_iqtree(iqtree, threads, output_folder, gene_name, model, constraint):	
@@ -31,8 +32,10 @@ def const_iqtree(iqtree, threads, output_folder, gene_name, model, constraint):
 	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 	t = p.communicate()[0].split("\n")
 	for i in t:
-		if i[0:23] == "Optimal log-likelihood:":
-			return str(i[24:])
+		#if i[0:23] == "Optimal log-likelihood:":
+		if i[0:18] == "BEST SCORE FOUND :":
+			return str(i[19:])
+
 def no_const_raxml(raxml, threads, output_folder, gene_name, model):
 	
 	if model == "DNA":
